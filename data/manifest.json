@@ -12,5 +12,12 @@
     "description": "Jot down tasks, ideas, goals, and skills to learn.",
     "url": "planner/",
     "emoji": "🗒️"
+  },
+  {
+    "id": "briefing",
+    "title": "Morning Market Update",
+    "description": "Fixed income desk briefing — rates, credit, volatility, benchmarks.",
+    "url": "https://mrrlexy.github.io/morning-briefing/",
+    "emoji": "📈"
   }
 ]

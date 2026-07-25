@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planner &amp; Ideas — The Brain</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a class="back" href="../">&larr; The Brain</a>
+    <h1>🗒️ Planner &amp; Ideas</h1>
+    <p class="tagline">Jot it down. Sort it out later.</p>
+  </header>
+  <main>
+    <form id="captureForm" class="capture">
+      <select id="category">
+        <option value="Task">Task</option>
+        <option value="Idea">Idea</option>
+        <option value="Goal">Goal</option>
+        <option value="Skill">Skill</option>
+      </select>
+      <input id="captureText" type="text" placeholder="What's on your mind?" autocomplete="off" required>
+      <button type="submit">Add →</button>
+    </form>
+    <p class="capture-note">Opens GitHub's new-issue page, pre-filled — tap "Submit new issue" there to save it.</p>
+
+    <div class="filters" id="filters">
+      <span class="chip active" data-filter="all">All</span>
+      <span class="chip" data-filter="Task">Task</span>
+      <span class="chip" data-filter="Idea">Idea</span>
+      <span class="chip" data-filter="Goal">Goal</span>
+      <span class="chip" data-filter="Skill">Skill</span>
+      <label class="show-done"><input type="checkbox" id="showDone"> Show done</label>
+    </div>
+
+    <div id="list"><p class="loading">Loading…</p></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

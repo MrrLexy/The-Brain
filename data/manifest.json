@@ -5,5 +5,12 @@
     "description": "Board game catalog — browse, search, filter, random picker.",
     "url": "https://mrrlexy.github.io/boardgame/",
     "emoji": "🎲"
+  },
+  {
+    "id": "planner",
+    "title": "Planner & Ideas",
+    "description": "Jot down tasks, ideas, goals, and skills to learn.",
+    "url": "planner/",
+    "emoji": "🗒️"
   }
 ]

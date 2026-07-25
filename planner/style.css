@@ -7,6 +7,8 @@ main{gap:16px}
 .capture input{flex:1;background:transparent;border:none;color:var(--ink);font-size:15px;outline:none;min-width:0}
 .capture button{background:var(--accent);color:#06202b;border:none;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
 .capture-note{margin:-8px 0 0;font-size:12px;color:var(--ink-soft);text-align:center}
+.capture-note.error{color:#d9756a}
+#captureBtn:disabled{opacity:.6;cursor:default}
 
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .chip{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--border);cursor:pointer;user-select:none;color:var(--ink-soft)}

@@ -1,4 +1,5 @@
 const REPO = 'MrrLexy/The-Brain';
+const WORKER_URL = 'https://the-brain-planner.a96velazquez.workers.dev';
 const CATEGORIES = ['Task', 'Idea', 'Goal', 'Skill'];
 
 const state = { filter: 'all', showDone: false, items: [] };
@@ -76,15 +77,51 @@ document.getElementById('showDone').addEventListener('change', (e) => {
   render();
 });
 
-document.getElementById('captureForm').addEventListener('submit', (e) => {
+function getPin() {
+  let pin = localStorage.getItem('planner_pin');
+  if (!pin) {
+    pin = prompt('Set a PIN to protect your planner (only asked once on this device):');
+    if (pin) localStorage.setItem('planner_pin', pin);
+  }
+  return pin;
+}
+
+document.getElementById('captureForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const category = document.getElementById('category').value;
   const text = document.getElementById('captureText').value.trim();
   if (!text) return;
-  const title = `[${category}] ${text}`;
-  const url = `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}`;
-  window.open(url, '_blank');
-  document.getElementById('captureText').value = '';
+  const pin = getPin();
+  if (!pin) return;
+
+  const btn = document.getElementById('captureBtn');
+  const status = document.getElementById('captureStatus');
+  btn.disabled = true;
+  status.textContent = 'Saving…';
+  status.classList.remove('error');
+
+  try {
+    const resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, text, pin }),
+    });
+    const result = await resp.json();
+    if (!resp.ok) {
+      if (resp.status === 401) localStorage.removeItem('planner_pin');
+      throw new Error(result.error || `HTTP ${resp.status}`);
+    }
+    document.getElementById('captureText').value = '';
+    status.textContent = 'Saved ✓';
+    state.items.unshift({ category, title: text, done: false, date: new Date().toISOString(), url: result.url });
+    render();
+    setTimeout(() => { status.textContent = 'Saves straight to your tracker — no extra tap.'; }, 2000);
+  } catch (err) {
+    status.textContent = `Couldn't save (${err.message}). Try again.`;
+    status.classList.add('error');
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 load();

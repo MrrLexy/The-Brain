@@ -1,29 +1,59 @@
 # The Brain
 
-Personal NFC-tag hub. Each tag encodes a URL like:
+Personal phone-first hub. One page that links to every small app, plus NFC tag
+support so a physical tap opens any of them.
+
+**Live:** <https://mrrlexy.github.io/The-Brain/>
+
+> New to this project? Read **[HANDOFF.md](HANDOFF.md)** — full architecture,
+> every repo, known failure modes, and open threads.
+
+## Layout
 
 ```
-https://mrrlexy.github.io/The-Brain/?id=<item-id>
+index.html          hub shell
+app.js              reads manifest, renders cards, handles ?id= redirect
+style.css           shared styling (planner extends it)
+data/manifest.json  the list of pages — edit this to add one
+planner/            Planner & Ideas page
 ```
 
-Tapping a tag opens this page, which looks up `<item-id>` in `data/manifest.json`
-and redirects straight to that item's own URL. Visiting the root with no `?id`
-shows a directory of everything registered.
+## Pages
 
-Standalone apps (like the board game menu) stay in their own repos — this hub
-just points at them. `data/manifest.json` is the only file you edit to add,
-rename, or retarget a tag; no redeploy of the linked app needed.
+| | Page | Where |
+|---|---|---|
+| 🎲 | Game Night Menu | [own repo](https://github.com/MrrLexy/boardgame) |
+| 🗒️ | Planner & Ideas | `planner/` here |
+| 📈 | Morning Market Update | [own repo](https://github.com/MrrLexy/morning-briefing) |
 
-## Adding a new item
+## Adding a page
 
-1. Add an entry to `data/manifest.json`:
-   ```json
-   { "id": "my-thing", "title": "...", "description": "...", "url": "...", "emoji": "..." }
-   ```
-2. Commit and push (or edit directly on github.com from your phone).
-3. Write an NFC tag with `https://mrrlexy.github.io/The-Brain/?id=my-thing`
-   (iOS: Shortcuts app → Automation → "Write Tags").
+Add an entry to `data/manifest.json`:
 
-## Current items
+```json
+{ "id": "slug", "title": "...", "description": "...", "url": "planner/", "emoji": "📌" }
+```
 
-- `boardgame` → [Game Night Menu](https://mrrlexy.github.io/boardgame/)
+`url` can be relative or absolute. Push; Pages redeploys in a minute or two.
+Then give the new page a back-link to the hub — see HANDOFF.md §4.
+
+## NFC tags
+
+Each tag stores `https://mrrlexy.github.io/The-Brain/?id=<slug>`. Visiting with
+`?id=` redirects straight to that page; without it you get the card list.
+Retargeting a tag is a manifest edit, not a rewrite of the tag.
+
+To write one on iPhone: **Shortcuts → Automation → NFC → Scan tag → Open URL →**
+paste the URL, then turn off "Ask Before Running".
+
+## Planner & Ideas
+
+Notes are stored as **GitHub Issues on this repo**, categorized by title prefix
+(`[Task]`, `[Idea]`, `[Goal]`, `[Skill]`). Closing an issue marks it done.
+
+Reading needs no auth. Writing goes through a small Cloudflare Worker that holds
+a GitHub token server-side — a static page can't hold one safely. The page
+prompts once for a PIN and caches it locally.
+
+If **Add** starts failing with `Bad credentials`, the GitHub token has expired.
+See the Worker's README for rotation steps.

@@ -19,5 +19,12 @@
     "description": "Fixed income desk briefing — rates, credit, volatility, benchmarks.",
     "url": "https://mrrlexy.github.io/morning-briefing/",
     "emoji": "📈"
+  },
+  {
+    "id": "bbg-import",
+    "title": "Bloomberg Data Converter",
+    "description": "Turn a refreshed Excel export into briefing data — stays on your device.",
+    "url": "https://mrrlexy.github.io/morning-briefing/import/",
+    "emoji": "🔄"
   }
 ]

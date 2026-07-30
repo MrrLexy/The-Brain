@@ -15,8 +15,8 @@ Design constraints that explain most of the decisions below:
 - **Static hosting only.** Every page is plain HTML/CSS/JS on GitHub Pages. No
   build step, no framework, no server to keep running.
 - **Free tier only.** GitHub Pages requires a **public** repo on a free plan
-  (private repos need Pro). That's why everything here is public, and why no
-  secret may ever live in page JavaScript.
+  (private repos need Pro). That's why every Pages-hosted repo here is public,
+  and why no secret may ever live in page JavaScript.
 - **iPhone is the target.** Safari has no Web NFC API, so a page can never read
   or write a tag itself. iOS *does* read NDEF URL tags natively at the OS level,
   so tags just carry URLs, and writing them is done once via the Shortcuts app.
@@ -31,12 +31,11 @@ Design constraints that explain most of the decisions below:
 | [boardgame](https://github.com/MrrLexy/boardgame) | [/boardgame/](https://mrrlexy.github.io/boardgame/) | Game Night Menu — 146-game catalog |
 | [boardgame-assets](https://github.com/MrrLexy/boardgame-assets) | jsDelivr CDN | Cover art + BGG data for the above |
 | [morning-briefing](https://github.com/MrrLexy/morning-briefing) | [/morning-briefing/](https://mrrlexy.github.io/morning-briefing/) | Fixed income desk briefing |
-| the-brain-worker | Cloudflare Worker | Write-side backend for the Planner |
+| [the-brain-worker](https://github.com/MrrLexy/the-brain-worker) | Cloudflare Worker | Write-side backend for the Planner |
 
-**⚠️ `the-brain-worker` is not yet on GitHub.** It is committed locally at
-`Documents\Claude\Projects\the-brain-worker` but has no remote. Create a repo
-and push it — right now the Worker source exists on exactly one machine, while
-the deployed Worker it corresponds to is load-bearing for the Planner.
+The Worker holds no secrets in source — the GitHub token and PIN are Cloudflare
+secrets, referenced only as `env.GITHUB_TOKEN` / `env.PLANNER_PIN`. It is the one
+component not on GitHub Pages, so it has no public-repo requirement.
 
 ```
                     ┌──────────────────────────┐
@@ -69,7 +68,7 @@ All under `C:\Users\a96ve\Documents\Claude\Projects\`:
 | `boardgame-repo\` | `MrrLexy/boardgame` — note the folder/repo names differ |
 | `boardgame-assets\` | `MrrLexy/boardgame-assets` |
 | `briefing\` | `MrrLexy/morning-briefing` — folder/repo names differ |
-| `the-brain-worker\` | **none yet** |
+| `the-brain-worker\` | `MrrLexy/the-brain-worker` |
 
 Deploying anything is just `git push`. GitHub Pages redeploys in ~1–2 minutes.
 There is no CI, no staging, no build.
@@ -193,7 +192,6 @@ disappears after a briefing run, that's why.
 
 ## 9. Open threads
 
-- **Push `the-brain-worker` to GitHub.** Highest priority; single point of failure.
 - **Token rotation.** The Planner's GitHub PAT expires. Calendar a reminder or
   switch to a longer expiry.
 - **Briefing improvement backlog.** A list of ~25 suggestions (responsive
@@ -203,5 +201,5 @@ disappears after a briefing run, that's why.
   bugs. Two actual bugs from that list *were* fixed (TOC ordering). Reported
   mojibake was not reproducible in the file.
 - **`data.json` timestamp reads `1970-01-01`**, i.e. the current local file is
-  stale/placeholder. Fine for layout work; run one of the three importers before
+  stale/placeholder. Fine for layout work; run one of the four import paths before
   treating any displayed number as real.
